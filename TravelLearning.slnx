@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="TravalLearning.Infrastructure/TravalLearning.Infrastructure.csproj" />
+  <Project Path="TravelLearning.Application/TravelLearning.Application.csproj" />
+  <Project Path="TravelLearning.Core/TravelLearning.Core.csproj" />
+  <Project Path="TravelLearning.Panel/TravelLearning.Panel.csproj" />
+</Solution>
