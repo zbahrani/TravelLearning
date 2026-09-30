@@ -1,0 +1,221 @@
+﻿@using TravelLearning.Application.Dtos
+@using TravelLearning.Application.Services
+@page "/contracts/add"
+@rendermode InteractiveServer
+
+@inject IContractService ContractService
+
+<PageTitle>ثبت قرارداد</PageTitle>
+
+<h3 class="mb-4">ثبت قرارداد جدید</h3>
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <EditForm Model="@model" OnSubmit="SaveAsync">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        نام مشتری
+                    </label>
+
+                    <InputText class="form-control"
+                               @bind-Value="model.CustomerName" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        نوع خدمت
+                    </label>
+
+                    <InputSelect class="form-select"
+                                 @bind-Value="model.ServiceType">
+
+                        <option value="">
+                            انتخاب کنید
+                        </option>
+
+                        <option value="Hotel">
+                            هتل
+                        </option>
+
+                        <option value="Flight">
+                            پرواز
+                        </option>
+
+                    </InputSelect>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        مبلغ
+                    </label>
+
+                    <InputNumber class="form-control"
+                                 @bind-Value="model.Amount" />
+                </div>
+
+                @if (model.ServiceType == "Hotel")
+                {
+                    <div class="col-12">
+                        <hr />
+
+                        <h5>اطلاعات هتل</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            نام هتل
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.HotelName" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            تاریخ ورود
+                        </label>
+
+                        <InputDate class="form-control"
+                                   @bind-Value="model.CheckIn" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            تاریخ خروج
+                        </label>
+
+                        <InputDate class="form-control"
+                                   @bind-Value="model.CheckOut" />
+                    </div>
+                }
+
+                @if (model.ServiceType == "Flight")
+                {
+                    <div class="col-12">
+                        <hr />
+
+                        <h5>اطلاعات پرواز</h5>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            مبدا
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.Origin" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            مقصد
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.Destination" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            شماره پرواز
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.FlightNumber" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            تاریخ پرواز
+                        </label>
+
+                        <InputDate class="form-control"
+                                   @bind-Value="model.FlightDate" />
+                    </div>
+                }
+
+                <div class="col-12 mt-4">
+
+                    <button type="submit"
+                            class="btn btn-primary"
+                            disabled="@isSaving">
+
+                        @if (isSaving)
+                        {
+                            <span>
+                                در حال ذخیره...
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                ثبت قرارداد
+                            </span>
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </EditForm>
+
+    </div>
+</div>
+
+@code
+{
+    private AddContractRequest model = new();
+
+    private bool isSaving;
+
+    private string? successMessage;
+
+    private string? errorMessage;
+
+    private async Task SaveAsync()
+    {
+        successMessage = null;
+        errorMessage = null;
+
+        try
+        {
+            isSaving = true;
+
+            var contractId =
+                await ContractService.AddContractAsync(model);
+
+            successMessage =
+                $"قرارداد با موفقیت ثبت شد. شماره قرارداد: {contractId}";
+
+            model = new AddContractRequest();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}
