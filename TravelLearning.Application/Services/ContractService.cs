@@ -1,4 +1,6 @@
-﻿using TravelLearning.Application.Dtos;
+﻿using System.Net.Http.Headers;
+using System.Reflection.Metadata.Ecma335;
+using TravelLearning.Application.Dtos;
 using TravelLearning.Core.Models;
 using TravelLearning.Core.Repositories;
 
@@ -48,6 +50,38 @@ namespace TravelLearning.Application.Services
             await _contractRepository.AddContractAsync(contract);
 
             return contract.Id;
+        }
+
+        public async Task<ContractDetailsDto> GetContractById(int id, CancellationToken cancellation = default)
+        {
+            var contract = await _contractRepository.GetByIdAsync(id);
+            if (contract == null)
+                return null;
+            return new ContractDetailsDto
+            {
+                Id = id,
+                CostumerName = contract.CustomerName,
+                Amount = contract.Amount,
+                ServiceType = contract.ServiceType,
+                HotelDetails = string.IsNullOrWhiteSpace(contract.HotelName) ? null
+                : new ContractHotelDetails
+                {
+                    HotelName = contract.HotelName,
+                    HotelId = contract.Id,
+                    Nights = contract.CheckIn.HasValue && contract.CheckOut.HasValue ? contract.CheckOut.Value.DayNumber - contract.CheckIn.Value.DayNumber : null
+
+                },
+                FlightDetails = string.IsNullOrWhiteSpace(contract.FlightNumber) ? null 
+                : new ContractFlightDetails
+                {
+                    FlightId = contract.Id,
+                    FlightNumber = contract.FlightNumber,
+                    Origin = contract.Origin,
+                    Destination = contract.Destination,
+                    FlightDate = contract.FlightDate
+
+                }
+            };
         }
     }
 }

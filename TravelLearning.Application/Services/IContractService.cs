@@ -5,6 +5,6 @@ namespace TravelLearning.Application.Services
     public interface IContractService
     {
         Task<int> AddContractAsync(AddContractRequest addContract, CancellationToken cancellation = default);
-        Task<>
+        Task<ContractDetailsDto> GetContractById(int id, CancellationToken cancellation = default);
     }
 }
