@@ -1,0 +1,183 @@
+﻿@page "/contracts/{Id:int}"
+@rendermode InteractiveServer
+
+@using TravelLearning.Application.Dtos
+@using TravelLearning.Application.Services
+
+@inject IContractService ContractService
+
+<PageTitle>جزئیات قرارداد</PageTitle>
+
+<div class="container py-4">
+
+    @if (isLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border" role="status"></div>
+            <p class="mt-3">در حال دریافت اطلاعات...</p>
+        </div>
+    }
+    else if (contract is null)
+    {
+        <div class="alert alert-warning">
+            قراردادی با شناسه @Id پیدا نشد.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0">جزئیات قرارداد</h4>
+                </div>
+
+                <span class="badge bg-light text-dark fs-6">
+                    #@contract.Id
+                </span>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-1">
+                            نام مشتری
+                        </div>
+
+                        <div class="fw-semibold">
+                            @contract.CostumerName
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-1">
+                            نوع خدمت
+                        </div>
+
+                        <div class="fw-semibold">
+                            @contract.ServiceType
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="text-muted small mb-1">
+                            مبلغ قرارداد
+                        </div>
+
+                        <div class="fw-semibold">
+                            @contract.Amount.ToString("N0")
+                        </div>
+                    </div>
+
+                </div>
+
+                @if (contract.HotelDetails is not null)
+                {
+                    <hr class="my-4" />
+
+                    <h5 class="mb-3">
+                        اطلاعات هتل
+                    </h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <div class="text-muted small mb-1">
+                                نام هتل
+                            </div>
+
+                            <div class="fw-semibold">
+                                @contract.HotelDetails.HotelName
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small mb-1">
+                                تعداد شب
+                            </div>
+
+                            <div class="fw-semibold">
+                                @contract.HotelDetails.Nights شب
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+                @if (contract.FlightDetails is not null)
+                {
+                    <hr class="my-4" />
+
+                    <h5 class="mb-3">
+                        اطلاعات پرواز
+                    </h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-3">
+                            <div class="text-muted small mb-1">
+                                مبدا
+                            </div>
+
+                            <div class="fw-semibold">
+                                @contract.FlightDetails.Origin
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="text-muted small mb-1">
+                                مقصد
+                            </div>
+
+                            <div class="fw-semibold">
+                                @contract.FlightDetails.Destination
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="text-muted small mb-1">
+                                شماره پرواز
+                            </div>
+
+                            <div class="fw-semibold">
+                                @contract.FlightDetails.FlightNumber
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="text-muted small mb-1">
+                                تاریخ پرواز
+                            </div>
+
+                            <div class="fw-semibold">
+                                @contract.FlightDetails.FlightDate?.ToString("yyyy/MM/dd")
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ContractDetailsDto? contract;
+    private bool isLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isLoading = true;
+
+        contract = await ContractService.GetContractById(Id);
+
+        isLoading = false;
+    }
+}

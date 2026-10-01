@@ -1,0 +1,38 @@
+﻿@page "/contracts/find"
+@rendermode InteractiveServer
+
+@inject NavigationManager Navigation
+
+<PageTitle>Find Contract</PageTitle>
+
+<h1>جستجوی قرارداد</h1>
+
+<div class="contract-search">
+
+    <label for="contractId">
+        شناسه قرارداد
+    </label>
+
+    <input id="contractId"
+           type="number"
+           class="form-control"
+           @bind="_contractId" />
+
+    <button class="btn btn-primary mt-3"
+            @onclick="SearchContract">
+        مشاهده قرارداد
+    </button>
+
+</div>
+
+@code {
+    private int? _contractId;
+
+    private void SearchContract()
+    {
+        if (!_contractId.HasValue || _contractId <= 0)
+            return;
+
+        Navigation.NavigateTo($"/contracts/{_contractId}");
+    }
+}

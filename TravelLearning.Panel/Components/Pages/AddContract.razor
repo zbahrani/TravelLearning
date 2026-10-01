@@ -138,8 +138,7 @@
                             شماره پرواز
                         </label>
 
-                        <InputText class="form-control"
-                                   @bind-Value="model.FlightNumber" />
+                        <InputText class="form-control" @bind-Value="model.FlightNumber" />
                     </div>
 
                     <div class="col-md-4">
@@ -147,8 +146,7 @@
                             تاریخ پرواز
                         </label>
 
-                        <InputDate class="form-control"
-                                   @bind-Value="model.FlightDate" />
+                        <InputDate class="form-control" @bind-Value="model.FlightDate" />
                     </div>
                 }
 
@@ -201,11 +199,9 @@
         {
             isSaving = true;
 
-            var contractId =
-                await ContractService.AddContractAsync(model);
+            var contractId = await ContractService.AddContractAsync(model);
 
-            successMessage =
-                $"قرارداد با موفقیت ثبت شد. شماره قرارداد: {contractId}";
+            successMessage = $"قرارداد با موفقیت ثبت شد. شماره قرارداد: {contractId}";
 
             model = new AddContractRequest();
         }

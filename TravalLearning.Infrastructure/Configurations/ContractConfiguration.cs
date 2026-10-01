@@ -11,6 +11,11 @@ namespace TravelLearning.Infrastructure.Configurations
         {
             builder.ToTable("Contracts");
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.CheckIn)
+                .HasColumnType("date");
+
+            builder.Property(x => x.CheckOut)
+                .HasColumnType("date");
             builder.Property(x => x.CustomerName)
                 .HasMaxLength(200)
                 .IsRequired();

@@ -68,7 +68,9 @@ namespace TravelLearning.Application.Services
                 {
                     HotelName = contract.HotelName,
                     HotelId = contract.Id,
-                    Nights = contract.CheckIn.HasValue && contract.CheckOut.HasValue ? contract.CheckOut.Value.DayNumber - contract.CheckIn.Value.DayNumber : null
+                    Nights = contract.CheckIn.HasValue && contract.CheckOut.HasValue
+                    ? (contract.CheckOut.Value.Date - contract.CheckIn.Value.Date).Days
+                    : null
 
                 },
                 FlightDetails = string.IsNullOrWhiteSpace(contract.FlightNumber) ? null 

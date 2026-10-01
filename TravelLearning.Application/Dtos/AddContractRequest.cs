@@ -6,8 +6,8 @@
         public string ServiceType { get; set; } = string.Empty;
         public decimal Amount { get; set; }
         public string? HotelName { get; set; }
-        public DateOnly? CheckIn { get; set; }
-        public DateOnly? CheckOut { get; set; }
+        public DateTime? CheckIn { get; set; }
+        public DateTime? CheckOut { get; set; }
         public string? Origin { get; set; }
 
         public string? Destination { get; set; }
